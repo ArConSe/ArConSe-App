@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
+export function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
@@ -14,9 +14,9 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T 
     try {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch {
-      // storage quota exceeded or unavailable
+      // ignore write errors
     }
   }, [key, storedValue]);
 
-  return [storedValue, setStoredValue];
+  return [storedValue, setStoredValue] as const;
 }
